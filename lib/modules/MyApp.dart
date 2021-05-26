@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class MyApp extends StatefulWidget {
   final String name;
@@ -15,6 +14,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+
+  String? _content;
+  int? _amount;
+
+  final GlobalKey<ScaffoldMessengerState> _scalffoldMessengerKey = new GlobalKey<ScaffoldMessengerState>();
+  final _conentController = TextEditingController();
+  final _amountController = TextEditingController();
 
   @override
   void initState() {
@@ -43,28 +49,63 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-
-    DateTime time = DateTime.now();
-
     return MaterialApp(
       title: "Đây là app",
+      scaffoldMessengerKey: _scalffoldMessengerKey,
       home: Scaffold(
-        body: Container(
-          padding: EdgeInsets.only(left: 10, top: 40, right: 15, bottom: 15),
+        body: SafeArea(child: Container(
+          padding: EdgeInsets.only(left: 20, right: 20),
           child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text( DateFormat('dd/mm/yyyy').format(time),
+                Text( "Tự học Flutter",
                     style: TextStyle(
                         fontSize: 30,
                         color: Colors.blue
                     )
+                ),
+                TextField(
+                  controller: _conentController,
+                  onChanged: (text) => {
+                    this.setState(() {
+                      this._content = text;
+                    })
+                  },
+                  decoration: InputDecoration(
+                      labelText: "Nội dung"
+                  ),
+                ),
+                Padding(padding: EdgeInsets.all(5)),
+                TextField(
+                  controller: _amountController,
+                  onChanged: (text) => this.setState(() {
+                    this._amount = int.tryParse(text) ?? 0;
+                  }),
+                  decoration: InputDecoration(
+                      labelText: "Số tiền"
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+                SizedBox(height: 20),
+                TextButton(
+                    style: TextButton.styleFrom(
+                        primary: Colors.white,
+                        backgroundColor: Colors.blue,
+                        padding: EdgeInsets.all(10)
+                    ),
+                    onPressed: ()=> {
+                      print('Button click: ${this._content} - ${this._amount}'),
+                      _scalffoldMessengerKey.currentState!.showSnackBar(
+                          SnackBar(content: Text('${this._content} - ${this._amount}'))
+                      )
+                    },
+                    child: Text("Xác Nhận", style: TextStyle(fontSize: 20))
                 )
               ],
             ),
           ),
-        )
+        ))
       ),
     );
   }
