@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(
-    MyApp(name: "Nguyên", age: 22)
+    MaterialApp(
+      title: "Học flutter",
+      home: MyApp(name: "Nguyên", age: 22),
+    )
   );
 }

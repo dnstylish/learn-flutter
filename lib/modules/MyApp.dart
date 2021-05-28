@@ -15,11 +15,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  Transaction _transaction = Transaction(content: "Nguyên", amount: 10);
+  Transaction _transaction =
+      Transaction(content: "Nguyên", amount: 10, createdAt: DateTime.now());
   List<Transaction> _transactions = [];
 
-  final GlobalKey<ScaffoldMessengerState> _scalffoldMessengerKey =
-      new GlobalKey<ScaffoldMessengerState>();
   final _conentController = TextEditingController();
   final _amountController = TextEditingController();
 
@@ -47,79 +46,100 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }
   }
 
+  void _onButtonShowModal() {
+    showModalBottomSheet(
+        context: this.context,
+        builder: (content) {
+          return Container(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                TextField(
+                  controller: _conentController,
+                  onChanged: (text) => {
+                    this.setState(() {
+                      _transaction.content = text;
+                    })
+                  },
+                  decoration: InputDecoration(labelText: "Nội dung"),
+                ),
+                Padding(padding: EdgeInsets.all(5)),
+                TextField(
+                  controller: _amountController,
+                  onChanged: (text) => this.setState(() {
+                    _transaction.amount = int.tryParse(text) ?? 0;
+                  }),
+                  decoration: InputDecoration(labelText: "Số tiền"),
+                  keyboardType: TextInputType.number,
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    TextButton(
+                        onPressed: (){
+                          this.setState(() {
+                            this._insertTransaction();
+                          });
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("Xác Nhận", style: TextStyle(color: Colors.white)),
+                      style: TextButton.styleFrom(
+                        primary: Colors.greenAccent,
+                        backgroundColor: Colors.green
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    TextButton(
+                      onPressed: (){
+                        // ẩn modal
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Huỷ Bỏ", style: TextStyle(color: Colors.white)),
+                      style: TextButton.styleFrom(
+                          primary: Colors.redAccent,
+                          backgroundColor: Colors.redAccent
+                      ),
+                    )
+                  ],
+                )
+              ],
+            )
+          );
+        });
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Đây là app",
-      scaffoldMessengerKey: _scalffoldMessengerKey,
-      home: Scaffold(
-          appBar: AppBar(
-            title: Text("Đây là AppBar"),
-            actions: <Widget>[
-              IconButton(
-                  onPressed: () {
-                    this.setState(() {
-                      this._insertTransaction();
-                    });
-                  },
-                  icon: Icon(Icons.add))
-            ],
-          ),
-          body: SafeArea(
-              child: Container(
-            padding: EdgeInsets.only(left: 20, right: 20),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text("Tự học Flutter",
-                      style: TextStyle(fontSize: 30, color: Colors.blue)),
-                  TextField(
-                    controller: _conentController,
-                    onChanged: (text) => {
-                      this.setState(() {
-                        _transaction.content = text;
-                      })
-                    },
-                    decoration: InputDecoration(labelText: "Nội dung"),
-                  ),
-                  Padding(padding: EdgeInsets.all(5)),
-                  TextField(
-                    controller: _amountController,
-                    onChanged: (text) => this.setState(() {
-                      _transaction.amount = int.tryParse(text) ?? 0;
-                    }),
-                    decoration: InputDecoration(labelText: "Số tiền"),
-                    keyboardType: TextInputType.number,
-                  ),
-                  SizedBox(height: 20),
-                  TextButton(
-                      style: TextButton.styleFrom(
-                          primary: Colors.white,
-                          backgroundColor: Colors.blue,
-                          padding: EdgeInsets.all(10)),
-                      onPressed: () => {
-                            print('Button click: ${_transaction.toString()}'),
-                            _scalffoldMessengerKey.currentState!.showSnackBar(
-                                SnackBar(
-                                    content: Text(_transaction.toString()))),
-                            this.setState(() {
-                              this._insertTransaction();
-                            })
-                          },
-                      child: Text("Xác Nhận", style: TextStyle(fontSize: 20))),
-                  SizedBox(height: 20),
-                  TransactionList(transactions: _transactions)
-                ],
-              ),
-            ),
-          ))),
-    );
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Đây là AppBar"),
+          actions: <Widget>[
+            IconButton(
+                onPressed: () {
+                  this._onButtonShowModal();
+                },
+                icon: Icon(Icons.add))
+          ],
+        ),
+        floatingActionButton:
+            FloatingActionButton(child: Icon(Icons.add), onPressed: () {
+              this._onButtonShowModal();
+            }),
+        body: SafeArea(
+            child: Container(
+          padding: EdgeInsets.only(left: 20, right: 20),
+          child: TransactionList(transactions: _transactions),
+        )));
   }
 
   void _insertTransaction() {
+    _transaction.createdAt = DateTime.now();
     _transactions.add(_transaction);
-    _transaction = Transaction(content: '', amount: 0);
+    _transaction =
+        Transaction(content: '', amount: 0, createdAt: DateTime.now());
     _conentController.text = '';
     _amountController.text = '';
   }
