@@ -5,6 +5,9 @@ void main() {
   runApp(
     MaterialApp(
       title: "Học flutter",
+      theme: ThemeData(
+        primaryColor: Colors.redAccent
+      ),
       home: MyApp(name: "Nguyên", age: 22),
     )
   );

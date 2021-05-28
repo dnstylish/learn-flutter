@@ -51,65 +51,63 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         context: this.context,
         builder: (content) {
           return Container(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                TextField(
-                  controller: _conentController,
-                  onChanged: (text) => {
-                    this.setState(() {
-                      _transaction.content = text;
-                    })
-                  },
-                  decoration: InputDecoration(labelText: "Nội dung"),
-                ),
-                Padding(padding: EdgeInsets.all(5)),
-                TextField(
-                  controller: _amountController,
-                  onChanged: (text) => this.setState(() {
-                    _transaction.amount = int.tryParse(text) ?? 0;
-                  }),
-                  decoration: InputDecoration(labelText: "Số tiền"),
-                  keyboardType: TextInputType.number,
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    TextButton(
-                        onPressed: (){
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  TextField(
+                    controller: _conentController,
+                    onChanged: (text) => {
+                      this.setState(() {
+                        _transaction.content = text;
+                      })
+                    },
+                    decoration: InputDecoration(labelText: "Nội dung"),
+                  ),
+                  Padding(padding: EdgeInsets.all(5)),
+                  TextField(
+                    controller: _amountController,
+                    onChanged: (text) => this.setState(() {
+                      _transaction.amount = int.tryParse(text) ?? 0;
+                    }),
+                    decoration: InputDecoration(labelText: "Số tiền"),
+                    keyboardType: TextInputType.number,
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      TextButton(
+                        onPressed: () {
                           this.setState(() {
                             this._insertTransaction();
                           });
                           Navigator.of(context).pop();
                         },
-                        child: Text("Xác Nhận", style: TextStyle(color: Colors.white)),
-                      style: TextButton.styleFrom(
-                        primary: Colors.greenAccent,
-                        backgroundColor: Colors.green
+                        child: Text("Xác Nhận",
+                            style: TextStyle(color: Colors.white)),
+                        style: TextButton.styleFrom(
+                            primary: Colors.greenAccent,
+                            backgroundColor: Colors.green),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    TextButton(
-                      onPressed: (){
-                        // ẩn modal
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("Huỷ Bỏ", style: TextStyle(color: Colors.white)),
-                      style: TextButton.styleFrom(
-                          primary: Colors.redAccent,
-                          backgroundColor: Colors.redAccent
-                      ),
-                    )
-                  ],
-                )
-              ],
-            )
-          );
+                      SizedBox(width: 10),
+                      TextButton(
+                        onPressed: () {
+                          // ẩn modal
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("Huỷ Bỏ",
+                            style: TextStyle(color: Colors.white)),
+                        style: TextButton.styleFrom(
+                            primary: Colors.redAccent,
+                            backgroundColor: Colors.redAccent),
+                      )
+                    ],
+                  )
+                ],
+              ));
         });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -124,10 +122,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 icon: Icon(Icons.add))
           ],
         ),
-        floatingActionButton:
-            FloatingActionButton(child: Icon(Icons.add), onPressed: () {
-              this._onButtonShowModal();
-            }),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            this._onButtonShowModal();
+          },
+          backgroundColor: Theme.of(context).primaryColor,
+        ),
         body: SafeArea(
             child: Container(
           padding: EdgeInsets.only(left: 20, right: 20),
